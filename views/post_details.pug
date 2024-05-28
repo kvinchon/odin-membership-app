@@ -1,0 +1,16 @@
+extends layout 
+
+block content
+  h1 #{title}: #{post._id}
+
+  p #[strong Title:] #{post.title}
+  p #[strong Content:] #{post.content}
+
+  if currentUser && currentUser.status !== 'guest'
+    p #[strong Author:] #{post.author.username}
+    p #[strong Posted on:] #{post.created_at_formatted}
+
+  if currentUser && currentUser.admin
+    hr
+    p
+      a.text-danger(href=post.url+'/delete') Delete post

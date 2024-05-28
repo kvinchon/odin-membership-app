@@ -1,0 +1,12 @@
+extends layout 
+
+block content
+  h1= title 
+
+  p List of users:
+
+  ul
+    each user in users
+      li
+        a(href=user.url) #{user.name} (#{user.username})
+

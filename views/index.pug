@@ -2,4 +2,13 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to the Club!
+  p The Club has the following posts:
+
+  dl
+    each post in posts
+      dt
+        a(href='/club/post/'+post._id) #{post.title}
+        if currentUser && currentUser.status !== 'guest'
+          |  - By #{post.author.username}, posted on #{post.created_at_formatted}
+      dd #{post.content}

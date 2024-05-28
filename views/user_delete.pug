@@ -1,0 +1,20 @@
+extends layout 
+
+block content
+  h1 #{title}: #{user._id} 
+
+  if currentUser && currentUser.admin
+    p #[strong First name:] #{user.first_name} 
+    p #[strong Last name:] #{user.last_name}
+    p #[strong Username:] #{user.username}
+    p #[strong Status:] #{user.status}
+  
+    if user.admin
+      p #[strong Admin:] #{user.admin}
+  
+    p Do you really want to delete this User?
+
+    form(method='POST')
+      div.form-group 
+        input#userid.form-control(type='hidden' name='userid' value=user._id)
+      button.btn.btn-danger(type='submit') Delete

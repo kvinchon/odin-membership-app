@@ -1,0 +1,19 @@
+extends layout 
+
+block content
+  h1= title 
+
+  form(method='POST')
+    div.form-group 
+      label(for='title') Title:
+      input#title.form-control(type='text' name='title' placeholder='Title' required value=(post === undefined ? '' : post.title))
+    div.form-group 
+      label(for='content') Content: 
+      input#content.form-control(type='text' name='content' placeholder='Content' required value=(post === undefined ? '' : post.content))
+    button.btn.btn-primary(type='submit') Submit
+  
+  if errors
+    ul
+      each error in errors
+        li= error.msg
+        

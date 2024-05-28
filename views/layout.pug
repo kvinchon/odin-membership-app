@@ -15,13 +15,26 @@ html(lang='en')
           block sidebar
             ul(class='sidebar-nav')
               li
-                a(href='/') Home
+                a(href='/club') Home
+              if currentUser
+                if currentUser.admin
+                  li
+                    a(href='/club/admin') Dashboard
+                if currentUser.status === 'guest'
+                  li
+                    a(href='/club/join') Join the club
+                li
+                  a(href='/club/post/create') Create new post
               li
                 hr
-              li
-                a(href='/auth/signup') Sign up
-              li
-                a(href='/auth/login') Log in
+              if currentUser
+                li
+                  a(href='/auth/logout') Log out
+              else
+                li
+                  a(href='/auth/signup') Sign up
+                li
+                  a(href='/auth/login') Log in
 
         div(class='col-sm-10')
           block content

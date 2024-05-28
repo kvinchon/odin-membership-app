@@ -2,22 +2,25 @@ const createError = require('http-errors');
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
 const RateLimit = require('express-rate-limit');
+const passport = require('./middlewares/passport');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const clubRouter = require('./routes/club');
 const usersRouter = require('./routes/users');
 
 const app = express();
 
 const limiter = RateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 20,
+  max: 50,
 });
 
 // Set up mongoose connection
@@ -36,8 +39,20 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.session());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
 app.use(compression()); // Compress all routes
 // Apply rate limiter to all requests
 app.use(limiter);
@@ -53,6 +68,7 @@ app.use(
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
+app.use('/club', clubRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

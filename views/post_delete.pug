@@ -1,0 +1,22 @@
+extends layout 
+
+block content
+  h1 #{title}: #{post._id}
+
+  p #[strong Title:] #{post.title}
+  p #[strong Content:] #{post.content}
+
+  if currentUser && currentUser.status !== 'guest'
+    p #[strong Author:] #{post.author.username}
+    p #[strong Posted on:] #{post.created_at_formatted}
+  
+  if currentUser && currentUser.admin
+    p Do you really want to delete this Post?
+
+    form(method='POST')
+      div.form-group 
+        input#postid.form-control(type='hidden' name='postid' value=post._id)
+      button.btn.btn-danger(type='submit') Delete
+
+  else 
+    p You must be an admin to delete this post.
